@@ -1,2 +1,12 @@
-marketing
-=========
+retweets <- function(term)
+{require(twitteR) 
+s <- searchTwitter(term, n=500)
+df <- do.call("rbind", lapply(s, as.data.frame))
+df$text <- sapply(df$text,function(row) iconv(row,to='UTF-8'))
+trim <- function (x) sub('@','',x)
+library(stringr)
+df$rt <- sapply(df$text,function(tweet) trim(str_match(tweet,"^RT (@[[:alnum:]_]*)")[2]))
+countRT <- table(df$rt)
+countRT <- sort(countRT)
+countRT.subset <- subset(countRT,countRT >2)
+barplot(countRT.subset,las=2,cex.names = 0.75)}
